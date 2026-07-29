@@ -4,16 +4,24 @@
 >Yes, this is in parts vibecoded. I wanted to get this done asap so I can start making Magic Proxies. 
 >Maybe I'll clean it up at some point, but it's such a small app, that the slop in here is fine. ...probably
 
-ProxyOverlay is a desktop application for applying a visual overlay to a folder of images. It is designed for batch image processing, with a live preview, selectable input and output folders, and configurable overlay scaling.
+ProxyOverlay is a desktop application for applying an overlay to a lot of images at once. Although it is initially designed to add a proxy warning to TCG proxies (mainly Magic:The Gathering and Yu-Gi-Oh), it can be used for other purposes where overlaying images with another (adding copyright information, applying borders to tokens,...) in batch is required.
 
 ## Features
 
+### General
 - Batch-process images in a folder
 - Apply an overlay to each image
 - Preview an image with the overlay before processing
 - Choose a custom overlay file
 - Scale the overlay from 10% to 100%
 - Supports `.jpg`, `.jpeg`, `.png`, `.bmp`, `.gif`, `.webp`, `.tif`, and `.tiff`
+
+### Magic: The Gathering related
+
+- [ ] Add a different overlay for different card (Spell, Creature, Planeswalker, Sagas, etc) or frame (Retro, Modern, M15) types
+- [ ] Automatically choose overlay based on filename
+- [ ] Manually choose overlay for images
+- [ ] Preview all overlays before processing
 
 ## Installation
 
@@ -34,7 +42,7 @@ Processed images are written to the output folder using their original filenames
 
 - .NET 10 SDK
 
-The project currently targets `net10.0` and uses Avalonia 12 and ShadUi for its user interface.
+The project currently targets `net10.0` and uses Avalonia 12 for its user interface.
 
 ## Getting started
 

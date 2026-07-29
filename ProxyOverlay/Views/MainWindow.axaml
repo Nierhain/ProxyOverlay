@@ -1,0 +1,223 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ProxyOverlay.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        x:Class="ProxyOverlay.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/icon.png"
+        Title="ProxyOverlay">
+
+    <Design.DataContext>
+        <vm:DesignMainViewModel />
+    </Design.DataContext>
+
+    <StackPanel Orientation="Horizontal" Spacing="32" Margin="16">
+        <ScrollViewer Width="500" Height="900" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16" Width="500">
+            <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold">Parameters</TextBlock>
+                <Separator />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Input folder" />
+                    <TextBox Text="{Binding InputFolderDisplay, Mode=OneWay}" Width="400" />
+                </StackPanel>
+                <Button
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Content="Browse"
+                    Width="64"
+                    Height="32"
+                    Command="{Binding OpenInputFolderCommand}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Output folder" />
+                    <TextBox Text="{Binding OutputFolderDisplay, Mode=OneWay}" Width="400" />
+                </StackPanel>
+                <Button
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Content="Browse"
+                    Width="64"
+                    Height="32"
+                    Command="{Binding OpenOutputFolderCommand}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Overlay" />
+                    <TextBox Text="{Binding ChosenFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                </StackPanel>
+                <Button
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Content="Browse"
+                    Width="64"
+                    Height="32"
+                    Command="{Binding OpenOverlayFileCommand}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Overlay folder" />
+                    <TextBox Text="{Binding OverlayFolder, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                </StackPanel>
+                <Button
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Content="Browse"
+                    Width="64"
+                    Height="32"
+                    Command="{Binding OpenOverlayFolderCommand}" />
+            </StackPanel>
+
+            <TextBlock Text="Overlay files by type" Margin="0,8,0,0" />
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding ModernOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Modern" Width="64" Command="{Binding OpenModernOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding ModernClassOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Class" Width="64" Command="{Binding OpenModernClassOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding ModernCreatureOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Creature" Width="64" Command="{Binding OpenModernCreatureOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding ModernPlaneswalkerOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Planeswalker" Width="64" Command="{Binding OpenModernPlaneswalkerOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding ModernRoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Room" Width="64" Command="{Binding OpenModernRoomOverlayFileCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock Text="Retro overlay files by type" Margin="0,8,0,0" />
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding RetroOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Retro" Width="64" Command="{Binding OpenRetroOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding RetroClassOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Class" Width="64" Command="{Binding OpenRetroClassOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding RetroCreatureOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Creature" Width="64" Command="{Binding OpenRetroCreatureOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding RetroPlaneswalkerOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Planeswalker" Width="64" Command="{Binding OpenRetroPlaneswalkerOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding RetroRoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Room" Width="64" Command="{Binding OpenRetroRoomOverlayFileCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock Text="M15 overlay files by type" Margin="0,8,0,0" />
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding M15OverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="M15" Width="64" Command="{Binding OpenM15OverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding M15ClassOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Class" Width="64" Command="{Binding OpenM15ClassOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding M15CreatureOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Creature" Width="64" Command="{Binding OpenM15CreatureOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding M15PlaneswalkerOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Planeswalker" Width="64" Command="{Binding OpenM15PlaneswalkerOverlayFileCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding M15RoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    <Button Content="Room" Width="64" Command="{Binding OpenM15RoomOverlayFileCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="6" Width="400" HorizontalAlignment="Left">
+                <TextBlock Text="Overlay size" Margin="0,6,0,0" FontSize="12" />
+                <Slider
+                    Margin="0,-10,0,0"
+                    Minimum="10"
+                    Maximum="100"
+                    Value="{Binding OverlayScale}"
+                    Width="400"
+                    HorizontalAlignment="Left" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Margin="0,-15,0,8"
+                    Text="{Binding OverlayScale,StringFormat={}{0:F0}%}" />
+            </StackPanel>
+            <Separator />
+
+            <StackPanel>
+                <TextBlock Text="Generating preview..."
+                           HorizontalAlignment="Center"
+                           IsVisible="{Binding IsPreviewLoading}" />
+                <ProgressBar
+                    IsVisible="{Binding IsProcessing}"
+                    Height="10"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="{Binding Progress}"
+                    Width="400"
+                    HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding Status}" HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <Button
+                Margin="0,16,0,0"
+                Height="40"
+                Content="Start Processing"
+                Command="{Binding ProcessImagesCommand}" />
+        </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Width="900" Height="900" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding ImagePreviews}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ImageOverlayPreview">
+                        <Border BorderBrush="Gray" BorderThickness="1" Padding="8" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Grid Width="220" Height="308">
+                                    <Image Source="{Binding Preview}"
+                                           Stretch="Uniform"
+                                           Width="220"
+                                           Height="308" />
+                                </Grid>
+                                <StackPanel VerticalAlignment="Center" Spacing="8" Width="400">
+                                    <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" />
+                                    <TextBlock Text="Overlay" />
+                                    <ComboBox ItemsSource="{Binding OverlayChoices}"
+                                              SelectedItem="{Binding SelectedOverlay, Mode=TwoWay}"
+                                              HorizontalAlignment="Stretch">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:OverlayChoice">
+                                                <TextBlock Text="{Binding DisplayName}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+</Window>
