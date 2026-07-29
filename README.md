@@ -18,10 +18,10 @@ ProxyOverlay is a desktop application for applying an overlay to a lot of images
 
 ### Magic: The Gathering related
 
-- [ ] Add a different overlay for different card (Spell, Creature, Planeswalker, Sagas, etc) or frame (Retro, Modern, M15) types
-- [ ] Automatically choose overlay based on filename
-- [ ] Manually choose overlay for images
-- [ ] Preview all overlays before processing
+- [x] Add a different overlay for different card (Class, Creature, Planeswalker, Room) or frame (Retro, Modern, M15) types
+- [x] Automatically choose an overlay using the card database abstraction
+- [x] Manually choose an overlay for images
+- [x] Preview all overlays before processing
 
 ## Installation
 
@@ -59,6 +59,24 @@ To build a release version:
 ```powershell
 dotnet build .\ProxyOverlay.slnx -c Release
 ```
+
+### Windows installer
+
+Install Inno Setup, publish the Windows build, and compile the installer:
+
+```powershell
+dotnet publish .\ProxyOverlay\ProxyOverlay.csproj -c Release -r win-x64 --self-contained true -o .\publish\win-x64
+iscc .\installer\ProxyOverlay.iss
+```
+
+The installer is created at `publish\installer\ProxyOverlay-Setup.exe`.
+
+Tagged GitHub Actions builds create the same installer automatically and upload it as the `ProxyOverlay-Windows-Installer` artifact.
+
+GitHub Actions also creates:
+
+- `ProxyOverlay-Linux-AppImage` for Linux x64
+- `ProxyOverlay-macOS-DMG` for macOS Apple Silicon
 
 ## Project structure
 

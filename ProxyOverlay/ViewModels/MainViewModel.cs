@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProxyOverlay.Models;
 using ProxyOverlay.Services;
 
 namespace ProxyOverlay.ViewModels;
-
-public record ProcessProgress(int Current, int Total);
 
 public partial class MainViewModel : ViewModelBase
 {
@@ -26,6 +25,15 @@ public partial class MainViewModel : ViewModelBase
     public partial string OutputFolder { get; set; }
     [ObservableProperty]
     public partial string OverlayFolder { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseCardDatabaseOverlayMatching { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowMagicProxySettings))]
+    public partial bool IsOtherPurpose { get; set; }
+
+    public bool ShowMagicProxySettings => !IsOtherPurpose;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ChosenFileDisplay))]
     public partial string ChosenFile { get; set; }
@@ -90,6 +98,12 @@ public partial class MainViewModel : ViewModelBase
     partial void OnM15CreatureOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnM15PlaneswalkerOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnM15RoomOverlayFileChanged(string value) => UpdateOverlayChoices();
+    partial void OnIsOtherPurposeChanged(bool value) => UpdateOverlayChoices();
+
+    partial void OnUseCardDatabaseOverlayMatchingChanged(bool value)
+    {
+        UpdateOverlayChoices();
+    }
     
     public string InputFolderDisplay => InputFolder ?? string.Empty;
     public string OutputFolderDisplay => OutputFolder ?? string.Empty;
@@ -142,6 +156,7 @@ public partial class MainViewModel : ViewModelBase
     private readonly IFileDialogService _fileDialogService;
     private readonly IImageProcessor _imageProcessor;
     private readonly IPreviewGenerator _previewGenerator;
+    private readonly ICardDatabase _cardDatabase;
     private CancellationTokenSource? _previewCancellation;
 
     private const uint PreviewWidth = 644;
@@ -330,8 +345,25 @@ public partial class MainViewModel : ViewModelBase
         var choices = GetOverlayChoices();
         foreach (var preview in ImagePreviews)
         {
-            preview.UpdateOverlayChoices(choices);
+            var preferredChoice = GetAutomaticOverlayChoice(preview.FilePath, choices);
+            preview.UpdateOverlayChoices(choices, preferredChoice);
         }
+    }
+
+    private OverlayChoice? GetAutomaticOverlayChoice(
+        string imagePath,
+        IReadOnlyList<OverlayChoice> choices)
+    {
+        if (!UseCardDatabaseOverlayMatching || IsOtherPurpose) return null;
+
+        var cardName = Path.GetFileNameWithoutExtension(imagePath);
+        var card = _cardDatabase.FindByName(cardName);
+        if (card is null || string.IsNullOrWhiteSpace(card.OverlayType)) return choices[0];
+
+        var overlayType = NormalizeFilePart(card.OverlayType);
+        return choices.FirstOrDefault(choice =>
+                   NormalizeFilePart(choice.DisplayName) == overlayType)
+               ?? choices[0];
     }
 
     private bool CanProcessImages() =>
@@ -346,7 +378,7 @@ public partial class MainViewModel : ViewModelBase
         {
             var overlayFiles = ImagePreviews.ToDictionary(
                 preview => preview.FilePath,
-                preview => preview.SelectedOverlay.FilePath,
+                preview => IsOtherPurpose ? ChosenFile : preview.SelectedOverlay.FilePath,
                 StringComparer.OrdinalIgnoreCase);
             await Task.Run(() => _imageProcessor.ProcessAsync(
                 InputFolder, OutputFolder, overlayFiles, OverlayScale, _progress));
@@ -359,24 +391,29 @@ public partial class MainViewModel : ViewModelBase
 
     private IReadOnlyList<OverlayChoice> GetOverlayChoices()
     {
+        if (IsOtherPurpose)
+        {
+            return [new("Overlay", "Base", ChosenFile)];
+        }
+
         return
         [
-            new("Default", ChosenFile),
-            new("Modern", ModernOverlayFile),
-            new("Modern Class", ModernClassOverlayFile),
-            new("Modern Creature", ModernCreatureOverlayFile),
-            new("Modern Planeswalker", ModernPlaneswalkerOverlayFile),
-            new("Modern Room", ModernRoomOverlayFile),
-            new("Retro", RetroOverlayFile),
-            new("Retro Class", RetroClassOverlayFile),
-            new("Retro Creature", RetroCreatureOverlayFile),
-            new("Retro Planeswalker", RetroPlaneswalkerOverlayFile),
-            new("Retro Room", RetroRoomOverlayFile),
-            new("M15", M15OverlayFile),
-            new("M15 Class", M15ClassOverlayFile),
-            new("M15 Creature", M15CreatureOverlayFile),
-            new("M15 Planeswalker", M15PlaneswalkerOverlayFile),
-            new("M15 Room", M15RoomOverlayFile)
+            new("Default", "Base", ChosenFile),
+            new("Modern", "Base", ModernOverlayFile),
+            new("Modern", "Class", ModernClassOverlayFile),
+            new("Modern", "Creature", ModernCreatureOverlayFile),
+            new("Modern", "Planeswalker", ModernPlaneswalkerOverlayFile),
+            new("Modern", "Room", ModernRoomOverlayFile),
+            new("Retro", "Base", RetroOverlayFile),
+            new("Retro", "Class", RetroClassOverlayFile),
+            new("Retro", "Creature", RetroCreatureOverlayFile),
+            new("Retro", "Planeswalker", RetroPlaneswalkerOverlayFile),
+            new("Retro", "Room", RetroRoomOverlayFile),
+            new("M15", "Base", M15OverlayFile),
+            new("M15", "Class", M15ClassOverlayFile),
+            new("M15", "Creature", M15CreatureOverlayFile),
+            new("M15", "Planeswalker", M15PlaneswalkerOverlayFile),
+            new("M15", "Room", M15RoomOverlayFile)
         ];
     }
 
@@ -396,7 +433,7 @@ public partial class MainViewModel : ViewModelBase
             var choices = GetOverlayChoices();
             var previews = files.Select(file =>
             {
-                var selected = choices[0];
+                var selected = GetAutomaticOverlayChoice(file, choices) ?? choices[0];
                 var item = new ImageOverlayPreview(file, choices, selected);
                 item.OverlayChanged += OnOverlayChanged;
                 return item;
@@ -431,12 +468,17 @@ public partial class MainViewModel : ViewModelBase
     private async void OnOverlayChanged(object? sender, EventArgs e)
     {
         if (sender is not ImageOverlayPreview preview) return;
+        if (preview.SelectedOverlay is not { } selectedOverlay) return;
+
+        // Capture the paths before starting the background task. Changing mode or
+        // refreshing the choices can temporarily clear SelectedOverlay.
+        var imagePath = preview.FilePath;
+        var overlayPath = selectedOverlay.FilePath;
 
         try
         {
             preview.Preview = await Task.Run(
-                () => _previewGenerator.CreatePreview(preview.FilePath,
-                    preview.SelectedOverlay.FilePath, 220, 308));
+                () => _previewGenerator.CreatePreview(imagePath, overlayPath, 220, 308));
         }
         catch (Exception exception) when (exception is IOException or InvalidOperationException)
         {
@@ -459,12 +501,14 @@ public partial class MainViewModel : ViewModelBase
         IImageProcessor imageProcessor,
         IFilesService filesService,
         IFileDialogService fileDialogService,
-        IPreviewGenerator previewGenerator)
+        IPreviewGenerator previewGenerator,
+        ICardDatabase cardDatabase)
     {
         _imageProcessor = imageProcessor;
         _filesService = filesService;
         _fileDialogService = fileDialogService;
         _previewGenerator = previewGenerator;
+        _cardDatabase = cardDatabase;
         _progress = new Progress<ProcessProgress>(current =>
         {
             CurrentFile = current.Current;

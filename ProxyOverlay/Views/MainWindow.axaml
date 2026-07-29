@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ProxyOverlay.ViewModels"
+        xmlns:model="using:ProxyOverlay.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
@@ -49,20 +50,27 @@
                     Command="{Binding OpenOutputFolderCommand}" />
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Spacing="4">
-                <StackPanel Spacing="4">
-                    <TextBlock Text="Overlay" />
-                    <TextBox Text="{Binding ChosenFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+            <Expander Header="Single overlay" IsExpanded="False">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Overlay" />
+                        <TextBox Text="{Binding ChosenFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
+                    </StackPanel>
+                    <Button
+                        Margin="4,0,0,0"
+                        VerticalAlignment="Bottom"
+                        Content="Browse"
+                        Width="64"
+                        Height="32"
+                        Command="{Binding OpenOverlayFileCommand}" />
                 </StackPanel>
-                <Button
-                    Margin="4,0,0,0"
-                    VerticalAlignment="Bottom"
-                    Content="Browse"
-                    Width="64"
-                    Height="32"
-                    Command="{Binding OpenOverlayFileCommand}" />
-            </StackPanel>
+            </Expander>
 
+            <CheckBox
+                Content="Other purpose (use one overlay for all images)"
+                IsChecked="{Binding IsOtherPurpose, Mode=TwoWay}" />
+
+            <StackPanel IsVisible="{Binding ShowMagicProxySettings}">
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <StackPanel Spacing="4">
                     <TextBlock Text="Overlay folder" />
@@ -77,8 +85,14 @@
                     Command="{Binding OpenOverlayFolderCommand}" />
             </StackPanel>
 
-            <TextBlock Text="Overlay files by type" Margin="0,8,0,0" />
+            <CheckBox
+                Content="Automatically match cards to overlays using the card database"
+                IsChecked="{Binding UseCardDatabaseOverlayMatching, Mode=TwoWay}" />
+
+            <Expander Header="Overlay types" IsExpanded="False">
             <StackPanel Spacing="4">
+                <Expander Header="Modern" IsExpanded="False">
+                <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding ModernOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Modern" Width="64" Command="{Binding OpenModernOverlayFileCommand}" />
@@ -99,10 +113,11 @@
                     <TextBox Text="{Binding ModernRoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Room" Width="64" Command="{Binding OpenModernRoomOverlayFileCommand}" />
                 </StackPanel>
-            </StackPanel>
+                </StackPanel>
+                </Expander>
 
-            <TextBlock Text="Retro overlay files by type" Margin="0,8,0,0" />
-            <StackPanel Spacing="4">
+                <Expander Header="Retro" IsExpanded="False">
+                <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding RetroOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Retro" Width="64" Command="{Binding OpenRetroOverlayFileCommand}" />
@@ -123,10 +138,11 @@
                     <TextBox Text="{Binding RetroRoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Room" Width="64" Command="{Binding OpenRetroRoomOverlayFileCommand}" />
                 </StackPanel>
-            </StackPanel>
+                </StackPanel>
+                </Expander>
 
-            <TextBlock Text="M15 overlay files by type" Margin="0,8,0,0" />
-            <StackPanel Spacing="4">
+                <Expander Header="M15" IsExpanded="False">
+                <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding M15OverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="M15" Width="64" Command="{Binding OpenM15OverlayFileCommand}" />
@@ -147,6 +163,11 @@
                     <TextBox Text="{Binding M15RoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Room" Width="64" Command="{Binding OpenM15RoomOverlayFileCommand}" />
                 </StackPanel>
+                </StackPanel>
+                </Expander>
+            </StackPanel>
+            </Expander>
+
             </StackPanel>
 
             <StackPanel Spacing="6" Width="400" HorizontalAlignment="Left">
@@ -202,16 +223,14 @@
                                 </Grid>
                                 <StackPanel VerticalAlignment="Center" Spacing="8" Width="400">
                                     <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" />
-                                    <TextBlock Text="Overlay" />
-                                    <ComboBox ItemsSource="{Binding OverlayChoices}"
-                                              SelectedItem="{Binding SelectedOverlay, Mode=TwoWay}"
-                                              HorizontalAlignment="Stretch">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate x:DataType="vm:OverlayChoice">
-                                                <TextBlock Text="{Binding DisplayName}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
+                                    <TextBlock Text="Overlay frame" />
+                                    <ComboBox ItemsSource="{Binding OverlayFrames}"
+                                              SelectedItem="{Binding SelectedFrame, Mode=TwoWay}"
+                                              HorizontalAlignment="Stretch" />
+                                    <TextBlock Text="Card type" />
+                                    <ComboBox ItemsSource="{Binding CardTypes}"
+                                              SelectedItem="{Binding SelectedCardType, Mode=TwoWay}"
+                                              HorizontalAlignment="Stretch" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>

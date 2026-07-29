@@ -5,22 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ImageMagick;
-using ProxyOverlay.ViewModels;
+using ProxyOverlay.Models;
 
 namespace ProxyOverlay.Services;
 
-public interface IImageProcessor
-{
-    public Task ProcessAsync(
-        string inputFolder,
-        string outputFolder,
-        IReadOnlyDictionary<string, string> overlayFiles,
-        double overlayPercent,
-        IProgress<ProcessProgress> progress,
-        CancellationToken token = default);
-}
-
-public class ImageProcessor: IImageProcessor
+public sealed class ImageProcessor: IImageProcessor
 {
     public async Task ProcessAsync(
         string inputFolder,

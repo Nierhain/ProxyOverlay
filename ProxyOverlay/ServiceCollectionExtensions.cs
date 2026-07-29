@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     public static void AddCommonServices(this IServiceCollection services)
     {
         services.AddSingleton<IImageProcessor, ImageProcessor>();
+        services.AddSingleton<ICardDatabase, EmptyCardDatabase>();
         services.AddSingleton<IFilesService, FilesService>();
         services.AddSingleton<IFileDialogService, AvaloniaFileDialogService>();
         services.AddTransient<MainViewModel>();

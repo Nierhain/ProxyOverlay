@@ -3,11 +3,7 @@ using ImageMagick;
 
 namespace ProxyOverlay.Services;
 
-public interface IPreviewGenerator
-{
-    Bitmap CreatePreview(string imagePath, string overlayPath, uint maxWidth, uint maxHeight);
-}
-public class PreviewGenerator: IPreviewGenerator
+public sealed class PreviewGenerator: IPreviewGenerator
 {
     public Bitmap CreatePreview(string imagePath, string overlayPath, uint maxWidth, uint maxHeight)
     {
