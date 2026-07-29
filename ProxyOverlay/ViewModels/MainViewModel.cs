@@ -39,60 +39,40 @@ public partial class MainViewModel : ViewModelBase
     public partial string ChosenFile { get; set; }
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ModernOverlayFileDisplay))]
-    public partial string ModernOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ModernClassOverlayFileDisplay))]
-    public partial string ModernClassOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string ModernOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ModernCreatureOverlayFileDisplay))]
-    public partial string ModernCreatureOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string ModernCreatureOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ModernPlaneswalkerOverlayFileDisplay))]
-    public partial string ModernPlaneswalkerOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ModernRoomOverlayFileDisplay))]
-    public partial string ModernRoomOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string ModernPlaneswalkerOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RetroOverlayFileDisplay))]
-    public partial string RetroOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RetroClassOverlayFileDisplay))]
-    public partial string RetroClassOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string RetroOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RetroCreatureOverlayFileDisplay))]
-    public partial string RetroCreatureOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RetroPlaneswalkerOverlayFileDisplay))]
-    public partial string RetroPlaneswalkerOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RetroRoomOverlayFileDisplay))]
-    public partial string RetroRoomOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string RetroCreatureOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(M15OverlayFileDisplay))]
-    public partial string M15OverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string M15OverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(M15ClassOverlayFileDisplay))]
-    public partial string M15ClassOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string M15ClassOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(M15CreatureOverlayFileDisplay))]
-    public partial string M15CreatureOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string M15CreatureOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(M15PlaneswalkerOverlayFileDisplay))]
-    public partial string M15PlaneswalkerOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string M15PlaneswalkerOverlayFile { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(M15RoomOverlayFileDisplay))]
-    public partial string M15RoomOverlayFile { get; set; } = Defaults.DefaultOverlayFile;
+    public partial string M15RoomOverlayFile { get; set; } = string.Empty;
 
     partial void OnModernOverlayFileChanged(string value) => UpdateOverlayChoices();
-    partial void OnModernClassOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnModernCreatureOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnModernPlaneswalkerOverlayFileChanged(string value) => UpdateOverlayChoices();
-    partial void OnModernRoomOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnRetroOverlayFileChanged(string value) => UpdateOverlayChoices();
-    partial void OnRetroClassOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnRetroCreatureOverlayFileChanged(string value) => UpdateOverlayChoices();
-    partial void OnRetroPlaneswalkerOverlayFileChanged(string value) => UpdateOverlayChoices();
-    partial void OnRetroRoomOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnM15OverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnM15ClassOverlayFileChanged(string value) => UpdateOverlayChoices();
     partial void OnM15CreatureOverlayFileChanged(string value) => UpdateOverlayChoices();
@@ -109,15 +89,10 @@ public partial class MainViewModel : ViewModelBase
     public string OutputFolderDisplay => OutputFolder ?? string.Empty;
     public string ChosenFileDisplay => DisplayPath(ChosenFile);
     public string ModernOverlayFileDisplay => DisplayPath(ModernOverlayFile);
-    public string ModernClassOverlayFileDisplay => DisplayPath(ModernClassOverlayFile);
     public string ModernCreatureOverlayFileDisplay => DisplayPath(ModernCreatureOverlayFile);
     public string ModernPlaneswalkerOverlayFileDisplay => DisplayPath(ModernPlaneswalkerOverlayFile);
-    public string ModernRoomOverlayFileDisplay => DisplayPath(ModernRoomOverlayFile);
     public string RetroOverlayFileDisplay => DisplayPath(RetroOverlayFile);
-    public string RetroClassOverlayFileDisplay => DisplayPath(RetroClassOverlayFile);
     public string RetroCreatureOverlayFileDisplay => DisplayPath(RetroCreatureOverlayFile);
-    public string RetroPlaneswalkerOverlayFileDisplay => DisplayPath(RetroPlaneswalkerOverlayFile);
-    public string RetroRoomOverlayFileDisplay => DisplayPath(RetroRoomOverlayFile);
     public string M15OverlayFileDisplay => DisplayPath(M15OverlayFile);
     public string M15ClassOverlayFileDisplay => DisplayPath(M15ClassOverlayFile);
     public string M15CreatureOverlayFileDisplay => DisplayPath(M15CreatureOverlayFile);
@@ -226,31 +201,26 @@ public partial class MainViewModel : ViewModelBase
     private void ResetOverlayFiles()
     {
         ChosenFile = Defaults.DefaultOverlayFile;
-        ModernOverlayFile = Defaults.DefaultOverlayFile;
-        ModernClassOverlayFile = Defaults.DefaultOverlayFile;
-        ModernCreatureOverlayFile = Defaults.DefaultOverlayFile;
-        ModernPlaneswalkerOverlayFile = Defaults.DefaultOverlayFile;
-        ModernRoomOverlayFile = Defaults.DefaultOverlayFile;
-        RetroOverlayFile = Defaults.DefaultOverlayFile;
-        RetroClassOverlayFile = Defaults.DefaultOverlayFile;
-        RetroCreatureOverlayFile = Defaults.DefaultOverlayFile;
-        RetroPlaneswalkerOverlayFile = Defaults.DefaultOverlayFile;
-        RetroRoomOverlayFile = Defaults.DefaultOverlayFile;
-        M15OverlayFile = Defaults.DefaultOverlayFile;
-        M15ClassOverlayFile = Defaults.DefaultOverlayFile;
-        M15CreatureOverlayFile = Defaults.DefaultOverlayFile;
-        M15PlaneswalkerOverlayFile = Defaults.DefaultOverlayFile;
-        M15RoomOverlayFile = Defaults.DefaultOverlayFile;
+        ModernOverlayFile = string.Empty;
+        ModernCreatureOverlayFile = string.Empty;
+        ModernPlaneswalkerOverlayFile = string.Empty;
+        RetroOverlayFile = string.Empty;
+        RetroCreatureOverlayFile = string.Empty;
+        M15OverlayFile = string.Empty;
+        M15ClassOverlayFile = string.Empty;
+        M15CreatureOverlayFile = string.Empty;
+        M15PlaneswalkerOverlayFile = string.Empty;
+        M15RoomOverlayFile = string.Empty;
     }
 
     private bool AssignOverlayFile(string frame, string cardType, string file)
     {
         var normalizedFrame = NormalizeFilePart(frame);
         var normalizedCardType = NormalizeFilePart(cardType);
-        var isBaseType = string.IsNullOrEmpty(normalizedCardType) ||
-                         normalizedCardType is "base" or "default";
+        var isDefaultType = string.IsNullOrEmpty(normalizedCardType) ||
+                            normalizedCardType is "base" or "default";
 
-        if (normalizedFrame == "default" && isBaseType)
+        if (normalizedFrame == "default" && isDefaultType)
         {
             ChosenFile = file;
             return true;
@@ -258,19 +228,14 @@ public partial class MainViewModel : ViewModelBase
 
         if (normalizedFrame is not ("modern" or "retro" or "m15")) return false;
 
-        switch (normalizedFrame, isBaseType ? "base" : normalizedCardType)
+        switch (normalizedFrame, normalizedCardType)
         {
-            case ("modern", "base"): ModernOverlayFile = file; break;
-            case ("modern", "class"): ModernClassOverlayFile = file; break;
+            case ("modern", "spell"): ModernOverlayFile = file; break;
             case ("modern", "creature"): ModernCreatureOverlayFile = file; break;
             case ("modern", "planeswalker"): ModernPlaneswalkerOverlayFile = file; break;
-            case ("modern", "room"): ModernRoomOverlayFile = file; break;
-            case ("retro", "base"): RetroOverlayFile = file; break;
-            case ("retro", "class"): RetroClassOverlayFile = file; break;
+            case ("retro", "spell"): RetroOverlayFile = file; break;
             case ("retro", "creature"): RetroCreatureOverlayFile = file; break;
-            case ("retro", "planeswalker"): RetroPlaneswalkerOverlayFile = file; break;
-            case ("retro", "room"): RetroRoomOverlayFile = file; break;
-            case ("m15", "base"): M15OverlayFile = file; break;
+            case ("m15", "spell"): M15OverlayFile = file; break;
             case ("m15", "class"): M15ClassOverlayFile = file; break;
             case ("m15", "creature"): M15CreatureOverlayFile = file; break;
             case ("m15", "planeswalker"): M15PlaneswalkerOverlayFile = file; break;
@@ -290,31 +255,16 @@ public partial class MainViewModel : ViewModelBase
     private async Task OpenModernOverlayFile() => await SelectOverlayFile(file => ModernOverlayFile = file);
 
     [RelayCommand]
-    private async Task OpenModernClassOverlayFile() => await SelectOverlayFile(file => ModernClassOverlayFile = file);
-
-    [RelayCommand]
     private async Task OpenModernCreatureOverlayFile() => await SelectOverlayFile(file => ModernCreatureOverlayFile = file);
 
     [RelayCommand]
     private async Task OpenModernPlaneswalkerOverlayFile() => await SelectOverlayFile(file => ModernPlaneswalkerOverlayFile = file);
 
     [RelayCommand]
-    private async Task OpenModernRoomOverlayFile() => await SelectOverlayFile(file => ModernRoomOverlayFile = file);
-
-    [RelayCommand]
     private async Task OpenRetroOverlayFile() => await SelectOverlayFile(file => RetroOverlayFile = file);
 
     [RelayCommand]
-    private async Task OpenRetroClassOverlayFile() => await SelectOverlayFile(file => RetroClassOverlayFile = file);
-
-    [RelayCommand]
     private async Task OpenRetroCreatureOverlayFile() => await SelectOverlayFile(file => RetroCreatureOverlayFile = file);
-
-    [RelayCommand]
-    private async Task OpenRetroPlaneswalkerOverlayFile() => await SelectOverlayFile(file => RetroPlaneswalkerOverlayFile = file);
-
-    [RelayCommand]
-    private async Task OpenRetroRoomOverlayFile() => await SelectOverlayFile(file => RetroRoomOverlayFile = file);
 
     [RelayCommand]
     private async Task OpenM15OverlayFile() => await SelectOverlayFile(file => M15OverlayFile = file);
@@ -393,23 +343,17 @@ public partial class MainViewModel : ViewModelBase
     {
         if (IsOtherPurpose)
         {
-            return [new("Overlay", "Base", ChosenFile)];
+            return [new("Overlay", "Spell", ChosenFile)];
         }
 
         return
         [
-            new("Default", "Base", ChosenFile),
-            new("Modern", "Base", ModernOverlayFile),
-            new("Modern", "Class", ModernClassOverlayFile),
+            new("M15", "Spell", M15OverlayFile),
+            new("Modern", "Spell", ModernOverlayFile),
             new("Modern", "Creature", ModernCreatureOverlayFile),
             new("Modern", "Planeswalker", ModernPlaneswalkerOverlayFile),
-            new("Modern", "Room", ModernRoomOverlayFile),
-            new("Retro", "Base", RetroOverlayFile),
-            new("Retro", "Class", RetroClassOverlayFile),
+            new("Retro", "Spell", RetroOverlayFile),
             new("Retro", "Creature", RetroCreatureOverlayFile),
-            new("Retro", "Planeswalker", RetroPlaneswalkerOverlayFile),
-            new("Retro", "Room", RetroRoomOverlayFile),
-            new("M15", "Base", M15OverlayFile),
             new("M15", "Class", M15ClassOverlayFile),
             new("M15", "Creature", M15CreatureOverlayFile),
             new("M15", "Planeswalker", M15PlaneswalkerOverlayFile),

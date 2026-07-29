@@ -100,7 +100,7 @@ public partial class ImageOverlayPreview : ObservableObject
         {
             selected = OverlayChoices.FirstOrDefault(choice =>
                 string.Equals(choice.Frame, SelectedFrame, StringComparison.Ordinal) &&
-                choice.CardType == "Base");
+                choice.CardType == "Spell");
         }
 
         if (selected is not null && !ReferenceEquals(selected, SelectedOverlay))

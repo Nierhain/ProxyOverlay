@@ -58,9 +58,9 @@ public sealed class MainViewModelTests
     public async Task OverlayFolder_LoadsFilesIntoMatchingFrameAndTypeSlots()
     {
         using var overlays = TestDirectory.Create();
-        overlays.AddFile("Modern_Class.png");
+        overlays.AddFile("Modern_Spell.png");
         overlays.AddFile("Retro_Creature.webp");
-        overlays.AddFile("M15.png");
+        overlays.AddFile("M15_Spell.png");
         overlays.AddFile("not-an-overlay.txt");
 
         var dialogs = new FakeFileDialogService { NextFolder = overlays.Path };
@@ -69,14 +69,14 @@ public sealed class MainViewModelTests
         await viewModel.OpenOverlayFolderCommand.ExecuteAsync(null);
 
         Assert.Equal(overlays.Path, viewModel.OverlayFolder);
-        Assert.Equal(Path.Combine(overlays.Path, "Modern_Class.png"), viewModel.ModernClassOverlayFile);
+        Assert.Equal(Path.Combine(overlays.Path, "Modern_Spell.png"), viewModel.ModernOverlayFile);
         Assert.Equal(Path.Combine(overlays.Path, "Retro_Creature.webp"), viewModel.RetroCreatureOverlayFile);
-        Assert.Equal(Path.Combine(overlays.Path, "M15.png"), viewModel.M15OverlayFile);
+        Assert.Equal(Path.Combine(overlays.Path, "M15_Spell.png"), viewModel.M15OverlayFile);
         Assert.Equal(1, dialogs.LastFolderLoadCount);
     }
 
     [Fact]
-    public async Task CardDatabaseMatching_UsesDefaultWhenCardIsNotFound()
+    public async Task CardDatabaseMatching_UsesM15SpellWhenCardIsNotFound()
     {
         using var input = TestDirectory.Create();
         input.AddFile("Unknown Card.png");
@@ -90,8 +90,8 @@ public sealed class MainViewModelTests
         await viewModel.OpenInputFolderCommand.ExecuteAsync(null);
 
         var preview = Assert.Single(viewModel.ImagePreviews);
-        Assert.Equal("Default", preview.SelectedOverlay.DisplayName);
-        Assert.Equal(Defaults.DefaultOverlayFile, preview.SelectedOverlay.FilePath);
+        Assert.Equal("M15", preview.SelectedOverlay.DisplayName);
+        Assert.Equal(viewModel.M15OverlayFile, preview.SelectedOverlay.FilePath);
     }
 
     private static MainViewModel CreateViewModel(

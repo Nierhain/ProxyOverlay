@@ -95,11 +95,7 @@
                 <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding ModernOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Modern" Width="64" Command="{Binding OpenModernOverlayFileCommand}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBox Text="{Binding ModernClassOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Class" Width="64" Command="{Binding OpenModernClassOverlayFileCommand}" />
+                    <Button Content="Spell" Width="64" Command="{Binding OpenModernOverlayFileCommand}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding ModernCreatureOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
@@ -109,10 +105,6 @@
                     <TextBox Text="{Binding ModernPlaneswalkerOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Planeswalker" Width="64" Command="{Binding OpenModernPlaneswalkerOverlayFileCommand}" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBox Text="{Binding ModernRoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Room" Width="64" Command="{Binding OpenModernRoomOverlayFileCommand}" />
-                </StackPanel>
                 </StackPanel>
                 </Expander>
 
@@ -120,23 +112,11 @@
                 <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding RetroOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Retro" Width="64" Command="{Binding OpenRetroOverlayFileCommand}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBox Text="{Binding RetroClassOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Class" Width="64" Command="{Binding OpenRetroClassOverlayFileCommand}" />
+                    <Button Content="Spell" Width="64" Command="{Binding OpenRetroOverlayFileCommand}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding RetroCreatureOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
                     <Button Content="Creature" Width="64" Command="{Binding OpenRetroCreatureOverlayFileCommand}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBox Text="{Binding RetroPlaneswalkerOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Planeswalker" Width="64" Command="{Binding OpenRetroPlaneswalkerOverlayFileCommand}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBox Text="{Binding RetroRoomOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="Room" Width="64" Command="{Binding OpenRetroRoomOverlayFileCommand}" />
                 </StackPanel>
                 </StackPanel>
                 </Expander>
@@ -145,7 +125,7 @@
                 <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding M15OverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
-                    <Button Content="M15" Width="64" Command="{Binding OpenM15OverlayFileCommand}" />
+                    <Button Content="Spell" Width="64" Command="{Binding OpenM15OverlayFileCommand}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBox Text="{Binding M15ClassOverlayFileDisplay, Mode=OneWay}" Width="400" IsReadOnly="True" />
@@ -204,6 +184,7 @@
             <Button
                 Margin="0,16,0,0"
                 Height="40"
+                HorizontalAlignment="Center"
                 Content="Start Processing"
                 Command="{Binding ProcessImagesCommand}" />
         </StackPanel>

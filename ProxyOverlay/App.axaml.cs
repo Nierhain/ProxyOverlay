@@ -20,8 +20,11 @@ public partial class App : Application
 
     private void PrepareTempDirectory()
     {
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "temp");
-        if(!Directory.Exists(path)) Directory.CreateDirectory(path);
+        var path = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ProxyOverlay",
+            "temp");
+        Directory.CreateDirectory(path);
         MagickNET.SetTempDirectory(path);
     }
 
