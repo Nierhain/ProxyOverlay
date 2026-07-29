@@ -1,7 +1,7 @@
 # ProxyOverlay
 
 >[!IMPORTANT]
->Yes, this is in parts vibecoded. I wanted to get this done asap so I can start making Magic Proxies. 
+>Yes, this is (in parts) vibecoded. I wanted to get this done asap so I can start making Magic Proxies. 
 >Maybe I'll clean it up at some point, but it's such a small app, that the slop in here is fine. ...probably
 
 ProxyOverlay is a desktop application for applying an overlay to a lot of images at once. Although it is initially designed to add a proxy warning to TCG proxies (mainly Magic:The Gathering and Yu-Gi-Oh), it can be used for other purposes where overlaying images with another (adding copyright information, applying borders to tokens,...) in batch is required.
