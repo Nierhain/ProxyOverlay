@@ -43,6 +43,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = mainWindow;
+            _ = new UpdateService().CheckAndApplyAsync();
         } else if (ApplicationLifetime is ISingleViewApplicationLifetime single)
         {
             single.MainView = mainWindow;

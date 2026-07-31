@@ -76,17 +76,30 @@ jobs:
           name: ProxyOverlay-win-x64
           path: publish/win-x64
 
-      - name: Install Inno Setup
-        run: choco install innosetup --no-progress -y
+      - name: Install Velopack CLI
+        shell: pwsh
+        run: dotnet tool install --tool-path .velopack vpk --version 0.0.140
 
-      - name: Build Windows installer
-        run: '& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DMyAppVersion=${{ needs.version.outputs.version }} installer\ProxyOverlay.iss'
+      - name: Build Windows Velopack package
+        shell: pwsh
+        run: >-
+          .\.velopack\vpk.exe pack
+          --packId ProxyOverlay
+          --packVersion ${{ needs.version.outputs.version }}
+          --packDir publish/win-x64
+          --mainExe ProxyOverlay.exe
+          --packTitle ProxyOverlay
+          --packAuthors Nierhain
+          --icon ProxyOverlay/Assets/icon.ico
+          --runtime win-x64
+          --channel win
+          --outputDir publish/installer
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
           name: ProxyOverlay-Windows-Installer
-          path: publish/installer/ProxyOverlay-Setup.exe
+          path: publish/installer/*
           retention-days: 30
 
   package-linux:
@@ -258,4 +271,4 @@ jobs:
         with:
           generate_release_notes: true
           fail_on_unmatched_files: true
-          files: release-assets/**/*.exe release-assets/**/*.AppImage release-assets/**/*.dmg
+          files: release-assets/**/*.exe release-assets/**/*.nupkg release-assets/**/RELEASES* release-assets/**/*.zip release-assets/**/*.AppImage release-assets/**/*.dmg
