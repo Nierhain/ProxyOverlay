@@ -18,10 +18,12 @@ public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(InputFolderDisplay))]
+    [NotifyPropertyChangedFor(nameof(ShowProcessingControls))]
     [NotifyCanExecuteChangedFor(nameof(ProcessImagesCommand))]
     public partial string InputFolder { get; set; }
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(OutputFolderDisplay))]
+    [NotifyPropertyChangedFor(nameof(ShowProcessingControls))]
     [NotifyCanExecuteChangedFor(nameof(ProcessImagesCommand))]
     public partial string OutputFolder { get; set; }
     [ObservableProperty]
@@ -36,11 +38,13 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowMagicProxySettings))]
+    [NotifyPropertyChangedFor(nameof(ShowProcessingControls))]
     public partial bool IsOtherPurpose { get; set; }
 
     public bool ShowMagicProxySettings => !IsOtherPurpose;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ChosenFileDisplay))]
+    [NotifyPropertyChangedFor(nameof(ShowProcessingControls))]
     public partial string ChosenFile { get; set; }
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ModernOverlayFileDisplay))]
@@ -93,6 +97,7 @@ public partial class MainViewModel : ViewModelBase
     public string InputFolderDisplay => InputFolder ?? string.Empty;
     public string OutputFolderDisplay => OutputFolder ?? string.Empty;
     public string ChosenFileDisplay => DisplayPath(ChosenFile);
+    public bool ShowProcessingControls => CanProcessImages();
     public string ModernOverlayFileDisplay => DisplayPath(ModernOverlayFile);
     public string ModernCreatureOverlayFileDisplay => DisplayPath(ModernCreatureOverlayFile);
     public string ModernPlaneswalkerOverlayFileDisplay => DisplayPath(ModernPlaneswalkerOverlayFile);
@@ -331,6 +336,8 @@ public partial class MainViewModel : ViewModelBase
             var preferredChoice = GetAutomaticOverlayChoice(preview.FilePath, choices);
             preview.UpdateOverlayChoices(choices, preferredChoice);
         }
+
+        RefreshProcessingControls();
     }
 
     private OverlayChoice? GetAutomaticOverlayChoice(
@@ -351,7 +358,9 @@ public partial class MainViewModel : ViewModelBase
 
     private bool CanProcessImages() =>
         !string.IsNullOrWhiteSpace(InputFolder) &&
-        !string.IsNullOrWhiteSpace(OutputFolder);
+        !string.IsNullOrWhiteSpace(OutputFolder) &&
+        GetOverlayChoices().Any(choice =>
+            !string.IsNullOrWhiteSpace(choice.FilePath));
 
     [RelayCommand(CanExecute = nameof(CanProcessImages))]
     private async Task ProcessImages()
@@ -433,6 +442,7 @@ public partial class MainViewModel : ViewModelBase
                 token.ThrowIfCancellationRequested();
             }
             FilesCount = previews.Count;
+            RefreshProcessingControls();
             token.ThrowIfCancellationRequested();
             Status = missingOverlay
                 ? "Select an overlay to generate previews."
@@ -466,6 +476,8 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
+        RefreshProcessingControls();
+
         try
         {
             preview.Preview = await Task.Run(
@@ -482,6 +494,12 @@ public partial class MainViewModel : ViewModelBase
 
     private static bool IsImage(string file) =>
         ImageExtensions.Contains(Path.GetExtension(file).ToLowerInvariant());
+
+    private void RefreshProcessingControls()
+    {
+        OnPropertyChanged(nameof(ShowProcessingControls));
+        ProcessImagesCommand.NotifyCanExecuteChanged();
+    }
 
     public void Initialize()
     {
