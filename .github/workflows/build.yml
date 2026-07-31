@@ -79,8 +79,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.release_tag || github.ref }}
-        with:
-          ref: ${{ inputs.release_tag || github.ref }}
 
       - name: Download Windows publish output
         uses: actions/download-artifact@v4
