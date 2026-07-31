@@ -94,16 +94,35 @@ public sealed class MainViewModelTests
         Assert.Equal(viewModel.M15OverlayFile, preview.SelectedOverlay.FilePath);
     }
 
+    [Fact]
+    public async Task SelectingInputFolderWithoutOverlayDoesNotGeneratePreviewWithEmptyPath()
+    {
+        using var input = TestDirectory.Create();
+        input.AddFile("Card.png");
+
+        var previewGenerator = new RejectsEmptyOverlayPreviewGenerator();
+        var viewModel = CreateViewModel(
+            previewGenerator: previewGenerator,
+            fileDialogService: new FakeFileDialogService { NextFolder = input.Path });
+
+        await viewModel.OpenInputFolderCommand.ExecuteAsync(null);
+
+        Assert.Single(viewModel.ImagePreviews);
+        Assert.Equal("Select an overlay to generate previews.", viewModel.Status);
+        Assert.Equal(0, previewGenerator.CallsWithEmptyOverlay);
+    }
+
     private static MainViewModel CreateViewModel(
         RecordingImageProcessor? processor = null,
         ICardDatabase? cardDatabase = null,
-        IFileDialogService? fileDialogService = null)
+        IFileDialogService? fileDialogService = null,
+        IPreviewGenerator? previewGenerator = null)
     {
         return new MainViewModel(
             processor ?? new RecordingImageProcessor(),
             new FakeFilesService(),
             fileDialogService ?? new FakeFileDialogService(),
-            new FakePreviewGenerator(),
+            previewGenerator ?? new FakePreviewGenerator(),
             cardDatabase ?? new RecordingCardDatabase(null));
     }
 
@@ -148,6 +167,19 @@ public sealed class MainViewModelTests
         public Bitmap CreatePreview(string imagePath, string overlayPath, uint maxWidth, uint maxHeight) => null!;
     }
 
+    private sealed class RejectsEmptyOverlayPreviewGenerator : IPreviewGenerator
+    {
+        public int CallsWithEmptyOverlay { get; private set; }
+
+        public Bitmap CreatePreview(string imagePath, string overlayPath, uint maxWidth, uint maxHeight)
+        {
+            if (string.IsNullOrWhiteSpace(overlayPath))
+                CallsWithEmptyOverlay++;
+
+            return null!;
+        }
+    }
+
     private sealed class FakeFilesService : IFilesService
     {
         public Task<string?> LoadFirstFile(string path) => Task.FromResult<string?>(null);
@@ -165,6 +197,8 @@ public sealed class MainViewModelTests
             LastFolderLoadCount++;
             return Task.FromResult(NextFolder);
         }
+
+        public Task<string?> OpenJsonlAsync() => Task.FromResult<string?>(null);
     }
 
     private sealed class TestDirectory : IDisposable

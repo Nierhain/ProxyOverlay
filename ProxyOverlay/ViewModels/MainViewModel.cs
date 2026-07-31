@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,6 +29,10 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial bool UseCardDatabaseOverlayMatching { get; set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ImportCardDatabaseCommand))]
+    public partial bool IsImportingCardDatabase { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowMagicProxySettings))]
@@ -174,6 +179,34 @@ public partial class MainViewModel : ViewModelBase
 
         OverlayFolder = folder;
         LoadOverlayFiles(folder);
+    }
+
+    [RelayCommand]
+    private async Task ImportCardDatabase()
+    {
+        var jsonlPath = await _fileDialogService.OpenJsonlAsync();
+        if (jsonlPath is null) return;
+
+        if (_cardDatabase is not JsonlCardDatabase database)
+        {
+            Status = "Card database import is unavailable.";
+            return;
+        }
+
+        IsImportingCardDatabase = true;
+        try
+        {
+            var count = await database.ImportAsync(jsonlPath);
+            Status = $"Imported {count:N0} card{(count == 1 ? "" : "s")}.";
+        }
+        catch (Exception exception) when (exception is IOException or FormatException or JsonException)
+        {
+            Status = $"Could not import card database: {exception.Message}";
+        }
+        finally
+        {
+            IsImportingCardDatabase = false;
+        }
     }
 
     private void LoadOverlayFiles(string folder)
@@ -375,6 +408,7 @@ public partial class MainViewModel : ViewModelBase
         {
             var files = Directory.EnumerateFiles(InputFolder).Where(IsImage).ToList();
             var choices = GetOverlayChoices();
+            var missingOverlay = false;
             var previews = files.Select(file =>
             {
                 var selected = GetAutomaticOverlayChoice(file, choices) ?? choices[0];
@@ -387,6 +421,12 @@ public partial class MainViewModel : ViewModelBase
             foreach (var preview in previews)
             {
                 ImagePreviews.Add(preview);
+                if (string.IsNullOrWhiteSpace(preview.SelectedOverlay.FilePath))
+                {
+                    missingOverlay = true;
+                    continue;
+                }
+
                 preview.Preview = await Task.Run(
                     () => _previewGenerator.CreatePreview(preview.FilePath,
                         preview.SelectedOverlay.FilePath, 220, 308), token);
@@ -394,7 +434,9 @@ public partial class MainViewModel : ViewModelBase
             }
             FilesCount = previews.Count;
             token.ThrowIfCancellationRequested();
-            Status = "Ready";
+            Status = missingOverlay
+                ? "Select an overlay to generate previews."
+                : "Ready";
         }
         catch (OperationCanceledException)
         {
@@ -418,13 +460,18 @@ public partial class MainViewModel : ViewModelBase
         // refreshing the choices can temporarily clear SelectedOverlay.
         var imagePath = preview.FilePath;
         var overlayPath = selectedOverlay.FilePath;
+        if (string.IsNullOrWhiteSpace(overlayPath))
+        {
+            Status = "Select an overlay to generate a preview.";
+            return;
+        }
 
         try
         {
             preview.Preview = await Task.Run(
                 () => _previewGenerator.CreatePreview(imagePath, overlayPath, 220, 308));
         }
-        catch (Exception exception) when (exception is IOException or InvalidOperationException)
+        catch (Exception exception) when (exception is IOException or InvalidOperationException or ArgumentException)
         {
             Status = $"Could not generate preview: {exception.Message}";
         }

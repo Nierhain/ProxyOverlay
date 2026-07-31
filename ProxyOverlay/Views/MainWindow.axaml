@@ -89,6 +89,10 @@
                 Content="Automatically match cards to overlays using the card database"
                 IsChecked="{Binding UseCardDatabaseOverlayMatching, Mode=TwoWay}" />
 
+            <Button Content="Import card database (JSONL)"
+                    Command="{Binding ImportCardDatabaseCommand}"
+                    IsEnabled="{Binding !IsImportingCardDatabase}" />
+
             <Expander Header="Overlay types" IsExpanded="False">
             <StackPanel Spacing="4">
                 <Expander Header="Modern" IsExpanded="False">
